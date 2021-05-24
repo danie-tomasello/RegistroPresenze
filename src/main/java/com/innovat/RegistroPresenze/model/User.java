@@ -44,12 +44,12 @@ public class User extends Auditable<String> implements Serializable{
 	
 	@Column(name = "NAME", length = 50)
     @NotNull(message="{NotNull.User.name}")
-    @Size(min = 4, max = 50, message="{Size.User.name}")
+    @Size(min = 2, max = 50, message="{Size.User.name}")
     private String name;
 	
 	@Column(name = "SURNAME", length = 50)
     @NotNull(message="{NotNull.User.surname}")
-    @Size(min = 4, max = 50, message="{Size.User.surname}")
+    @Size(min = 2, max = 50, message="{Size.User.surname}")
     private String surname;
 
     @Column(name = "PASSWORD", length = 100)

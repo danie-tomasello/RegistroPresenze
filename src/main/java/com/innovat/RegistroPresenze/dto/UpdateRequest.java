@@ -14,11 +14,11 @@ public class UpdateRequest {
 	
 	
 	@NotNull(message="{NotNull.User.id}")
-    @Size(min = 4, max = 50, message="{Size.User.id}")
+    @Size(min = 1, max = 50, message="{Size.User.id}")
 	private Long id;
 	
 	@NotNull(message="{NotNull.User.username}")
-    @Size(min = 4, max = 50, message="{Size.User.username}")
+    @Size(min = 2, max = 50, message="{Size.User.username}")
 	private String username;
 	
 	@NotNull(message="{NotNull.User.name.}")
