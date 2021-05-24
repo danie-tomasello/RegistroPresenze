@@ -26,7 +26,6 @@ import lombok.extern.java.Log;
 
 @Log
 @Service
-@CacheConfig(cacheNames= {"user"})
 public class UserServiceImpl implements UserService {	
      
 	@Autowired
@@ -37,13 +36,13 @@ public class UserServiceImpl implements UserService {
     
    
     
-   @Cacheable(value="user", key = "#username", sync = true)
+   @Cacheable(value="user", key ="#username")
     public User loadUserByUsername(String username) {
 	   log.info("loadUser richiesta non cachata");
 	   return repo.findByUsername(username);
     }
 
-    @Cacheable
+    @Cacheable(value="users")
 	public List<User> getAll() {
 		// TODO Auto-generated method stub
     	log.info("getAll richiesta non cachata");
@@ -59,22 +58,45 @@ public class UserServiceImpl implements UserService {
 
 	@Caching(evict = {
 			@CacheEvict(cacheNames = "users", allEntries = true),
-			@CacheEvict(cacheNames = "user", key = "#dtouser.username")
+			@CacheEvict(cacheNames = "user", allEntries = true)
 	})
 	public void save(DTOUser dtouser,String userLogged) {
 		// TODO Auto-generated method stub
 		User user = DTOUserFactory.createUser(dtouser,userLogged);
 		
-		Authority authorityUser = auth.findByName("ROLE_USER");
-	    List<Authority> authorities = Arrays.asList(new Authority[] {authorityUser});
-	    user.setAuthorities(authorities);
+		List<Authority> authlist = new ArrayList<>();
+		Map<String,Authority> mapAuth = mapListAuth(auth.findAll());
+		authlist.add(mapAuth.remove("ROLE_USER"));
+		
+		for(String auth : dtouser.getAuthorities()) {
+			if(mapAuth.containsKey(auth)) {
+				authlist.add(mapAuth.get(auth));
+			}
+		}
+		
+		int n = 0; 
+		for(boolean i = false; i==false; n++ ) {
+			
+			String username = user.getUsername();
+			if(n>0) {
+				username+=n;
+			}
+			
+			i = repo.findByUsername(username)==null;
+			
+			if(i==true) {
+				user.setUsername(username);
+			}
+		}
+		
+		user.setAuthorities(authlist);
 	    
     	repo.save(user);
 	}
 
 	@Caching(evict = {
 			@CacheEvict(cacheNames = "users", allEntries = true),
-			@CacheEvict(cacheNames = "user", key = "#id")
+			@CacheEvict(cacheNames = "user", allEntries = true)
 	})
 	public void delete(Long id) {
 		// TODO Auto-generated method stub
@@ -83,13 +105,14 @@ public class UserServiceImpl implements UserService {
 
 	@Caching(evict = {
 			@CacheEvict(cacheNames = "users", allEntries = true),
-			@CacheEvict(cacheNames = "user", key = "#dtouser.username")
+			@CacheEvict(cacheNames = "user", allEntries = true)
 	})
 	@Override
 	public void update(DTOUser dtouser, String userLogged) {
 		// TODO Auto-generated method stub
 		
 		User user = DTOUserFactory.createUser(dtouser,userLogged);
+		user.setUsername("admin");
 		List<Authority> authlist = new ArrayList<>();
 		Map<String,Authority> mapAuth = mapListAuth(auth.findAll());
 		
@@ -109,6 +132,18 @@ public class UserServiceImpl implements UserService {
         }
         return res;
     }
+
+	@Override
+	public User loadUserByEmail(String email) {
+		log.info("findEmail richiesta non cachata");
+		return repo.findByEmail(email);
+	}
+
+	@Override
+	public User loadUserByPhoneNumber(String username) {
+		log.info("findPhoneNumber richiesta non cachata");
+		return repo.findByPhoneNumber(username);
+	}
 
         
 }

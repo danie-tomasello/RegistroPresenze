@@ -13,42 +13,54 @@ public class DTOUserFactory {
 	
 	
 	public static User createUser(DTOUser dtouser,String userlog) {
+		
 		User user = new User();
+		
 		if(dtouser.getId()!=null) {
 			user.setId(dtouser.getId());
 		}
-		user.setUsername(dtouser.getUsername());
+		if(dtouser.getUsername()!=null) {
+			String username = dtouser.getName().charAt(0) + "." +dtouser.getSurname();
+			user.setUsername(username.toLowerCase());
+		}
+		else {
+			user.setUsername(dtouser.getUsername());
+		}
+		
+		user.setName(dtouser.getName());
+		
+		user.setSurname(dtouser.getSurname());
 	    
 	    user.setPassword(dtouser.getPassword());
-	    
-	    user.setEnabled(true); 
-	    if(dtouser.getEnabled()!=null&&dtouser.getEnabled()==false) {
-	    	user.setEnabled(dtouser.getEnabled());
-	    }
 	    
 	    user.setEmail(dtouser.getEmail());
 	    
 	    user.setPhoneNumber(dtouser.getPhoneNumber());
-	    
-	    if(dtouser.getVerification()!=null) {
-	    	user.setVerification(dtouser.getVerification());
-	    }
+
 	    user.setLastModifiedBy(userlog);
+	    
 	    return user;
 	 
 	}
 	
 	public static DTOUser createDTOUser(User user) {
+		
 		DTOUser dtouser = new DTOUser();
+		
 		dtouser.setId(user.getId());
 		
 		dtouser.setUsername(user.getUsername());
-		dtouser.setPassword(user.getPassword());
-		dtouser.setVerification(user.getVerification());
-		dtouser.setPhoneNumber(user.getPhoneNumber());
-		dtouser.setEmail(user.getEmail());
 		
-		dtouser.setEnabled(user.getEnabled());
+		dtouser.setName(user.getName());
+		
+		dtouser.setSurname(user.getSurname());
+		
+		dtouser.setPassword(user.getPassword());
+		
+		dtouser.setPhoneNumber(user.getPhoneNumber());
+		
+		dtouser.setEmail(user.getEmail());
+
 		dtouser.setAuthorities(mapToGrantedAuthorities(user.getAuthorities()));
 		
 		

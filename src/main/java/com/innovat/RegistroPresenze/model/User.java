@@ -38,27 +38,32 @@ public class User extends Auditable<String> implements Serializable{
 	private Long id;
 	
 	@Column(name = "USERNAME", length = 50, unique = true)
-    @NotNull(message="{NotNull.User.username.Validation}")
-    @Size(min = 4, max = 50, message="{Size.User.username.Validation}")
+    @NotNull(message="{NotNull.User.username}")
+    @Size(min = 4, max = 50, message="{Size.User.username}")
     private String username;
+	
+	@Column(name = "NAME", length = 50)
+    @NotNull(message="{NotNull.User.name}")
+    @Size(min = 4, max = 50, message="{Size.User.name}")
+    private String name;
+	
+	@Column(name = "SURNAME", length = 50)
+    @NotNull(message="{NotNull.User.surname}")
+    @Size(min = 4, max = 50, message="{Size.User.surname}")
+    private String surname;
 
     @Column(name = "PASSWORD", length = 100)
-    @NotNull(message="{NotNull.User.password.Validation}")
-    @Size(min = 4, max = 100, message="{Size.User.password.Validation}")
+    @NotNull(message="{NotNull.User.password}")
+    @Size(min = 4, max = 100, message="{Size.User.password}")
     private String password;
-
-    @Column(name = "ENABLED")
-    @NotNull
-    private Boolean enabled;
     
     @Column(name = "EMAIL", length = 50, unique = true)
-    @NotNull(message="{NotNull.User.email.Validation}")
-    @Size(min = 4, max = 50 ,message="{Size.User.email.Validation}")
+    @NotNull(message="{NotNull.User.email}")
+    @Size(min = 4, max = 50 ,message="{Size.User.email}")
     private String email;
     
     @Column(name = "PHONE_NUMBER", length = 15, unique = true)
-    @NotNull(message="{NotNull.User.phoneNumber.Validation}")
-    @Size(min = 4, max = 15, message="{Size.User.phoneNumber.Validation}")
+    @Size(min = 4, max = 15, message="{Size.User.phoneNumber}")
     private String phoneNumber;
       
 

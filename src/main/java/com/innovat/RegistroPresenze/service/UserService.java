@@ -20,4 +20,8 @@ public interface UserService {
 	
 	public boolean isExist(Long id);
 
+	public User loadUserByEmail(String email);
+
+	public User loadUserByPhoneNumber(String username);
+
 }

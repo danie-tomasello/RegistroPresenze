@@ -63,7 +63,6 @@ public class RegistroPresenzeApplication {
 
 				user = new User();
 				user.setAuthorities(authorities);
-				user.setEnabled(true);
 				user.setUsername("admin");
 				user.setEmail("email@example.it");
 				user.setPhoneNumber("123456789");
@@ -89,7 +88,6 @@ public class RegistroPresenzeApplication {
 
 				user = new User();
 				user.setAuthorities(authorities);
-				user.setEnabled(true);
 				user.setUsername("dani");
 				user.setEmail("email2@example.it");
 				user.setPhoneNumber("987654321");
