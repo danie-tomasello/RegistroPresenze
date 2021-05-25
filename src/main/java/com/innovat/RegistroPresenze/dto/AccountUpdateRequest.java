@@ -1,8 +1,5 @@
 package com.innovat.RegistroPresenze.dto;
 
-import java.util.List;
-
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -11,12 +8,8 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class UpdateRequest {
-	
-	
-	@NotNull(message="{NotNull.User.id}")
-	@Min(value = 1, message = "{Min.User.id}")
-	private Long id;
+public class AccountUpdateRequest {
+
 	
 	@NotNull(message="{NotNull.User.username}")
     @Size(min = 2, max = 50, message="{Size.User.username}")
@@ -41,10 +34,6 @@ public class UpdateRequest {
     @Size(min = 4, max = 15, message="{Size.User.phoneNumber}")
 	private String phoneNumber;
 	
-	private List<String> authorities;
     
-    
-    
-    public UpdateRequest(){}
-
+    public AccountUpdateRequest(){}
 }

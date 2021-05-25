@@ -92,6 +92,7 @@ public class GestioneUtentiController {
 		dtouser.setPassword(passwordEncoder.encode(requestBody.getPassword()));
 		dtouser.setEmail(requestBody.getEmail());
 		dtouser.setPhoneNumber(requestBody.getPhoneNumber());
+		dtouser.setAuthorities(requestBody.getAuthorities());
 		
 		
 		if(service.loadUserByEmail(dtouser.getEmail())!=null) {
@@ -164,7 +165,7 @@ public class GestioneUtentiController {
     		throw new DuplicateException(errMsg);
     	}
     	
-    	log.info("start registrazione utente");
+    	log.info("start modifica utente");
     	
     	DTOUser dtouser = new DTOUser();
     	dtouser.setId(requestBody.getId());
@@ -174,6 +175,7 @@ public class GestioneUtentiController {
 		dtouser.setPassword(passwordEncoder.encode(requestBody.getPassword()));
 		dtouser.setEmail(requestBody.getEmail());
 		dtouser.setPhoneNumber(requestBody.getPhoneNumber());
+		dtouser.setAuthorities(requestBody.getAuthorities());
     	
     	service.update(dtouser,userlogged.getUsername()); 
     	res.setCod(HttpStatus.CREATED.value());

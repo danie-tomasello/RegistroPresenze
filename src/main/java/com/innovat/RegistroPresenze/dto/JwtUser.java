@@ -16,6 +16,7 @@ public class JwtUser implements UserDetails {
 	 * 
 	 */
 	private static final long serialVersionUID = -922238219430436585L;
+	private final Long id;
 	private final String username;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
@@ -23,10 +24,12 @@ public class JwtUser implements UserDetails {
 
     
     public JwtUser(
+    		Long id,
             String username,
             String password, Collection<? extends GrantedAuthority> authorities,
             boolean enabled
     ) {
+    	this.id = id;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
@@ -34,6 +37,9 @@ public class JwtUser implements UserDetails {
     }
 
 
+    public Long getId() {
+    	return id;
+    }
     @Override
     public String getUsername() {
         return username;

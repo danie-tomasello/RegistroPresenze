@@ -37,6 +37,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			"/user/search/*"
 	};
 	String[] urlUser = {
+			"account/get",
+			"account/update",
 			"/auth/logout"
 			};
 	

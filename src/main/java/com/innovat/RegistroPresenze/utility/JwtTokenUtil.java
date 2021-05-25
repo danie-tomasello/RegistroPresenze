@@ -30,6 +30,7 @@ public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = -3301605591108950415L;
 
+    static final String CLAIM_KEY_ID = "idAccount";
     static final String CLAIM_KEY_USERNAME = "sub";
     static final String CLAIM_KEY_AUDIENCE = "audience";
     static final String CLAIM_KEY_CREATED = "iat";
@@ -70,6 +71,7 @@ public class JwtTokenUtil implements Serializable {
             }
 
             return new JwtUser(
+            		claims.get(CLAIM_KEY_ID, Long.class),
                     claims.getSubject(),
                     "",
                     authorities,
@@ -128,6 +130,7 @@ public class JwtTokenUtil implements Serializable {
 
     public String generateToken(UserDetails userDetails) throws JsonProcessingException {
         Map<String, Object> claims = new HashMap<>();
+        claims.put(CLAIM_KEY_ID, ((JwtUser) userDetails).getId());
         claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
         claims.put(CLAIM_KEY_CREATED, new Date());
         List<String> auth =userDetails.getAuthorities().stream().map(role-> role.getAuthority()).collect(Collectors.toList());

@@ -19,7 +19,7 @@ public class DTOUserFactory {
 		if(dtouser.getId()!=null) {
 			user.setId(dtouser.getId());
 		}
-		if(dtouser.getUsername()!=null) {
+		if(dtouser.getUsername()==null) {
 			String username = dtouser.getName().charAt(0) + "." +dtouser.getSurname();
 			user.setUsername(username.toLowerCase());
 		}
