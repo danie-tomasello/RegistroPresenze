@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,10 +32,13 @@ import lombok.extern.java.Log;
 @RequestMapping(value = "${gestioneUtenti.search}")
 @Api(value="search", tags="Controller operazioni di ricerca dati utenti")
 @Log
-public class GestioneUtentiSearchController {
+public class UtentiSearchController {
 
 	@Autowired
     private UserService service;
+	
+	@Autowired
+	private ResourceBundleMessageSource msg;
 	
 	
 	@ApiOperation(
@@ -48,7 +53,7 @@ public class GestioneUtentiSearchController {
 	    @ApiResponse(code = 401, message = "Non sei AUTENTICATO")
 	})
 	@RequestMapping(value = "${gestioneUtenti.getAll}", method = RequestMethod.GET)
-  public ResponseEntity<?> getAllUser(HttpServletRequest request, HttpServletResponse response){
+  public ResponseEntity<?> getAllUser(HttpServletRequest request, HttpServletResponse response) throws NotFoundException{
   	log.info("===========================Start search/'all'===============================");
   	
   	List<DTOUser> resList = new ArrayList<>();
@@ -58,6 +63,12 @@ public class GestioneUtentiSearchController {
   	
   	for(User user : userList) {
   		resList.add(DTOUserFactory.createDTOUser(user));
+  	}
+  	
+  	if(resList.isEmpty()) {
+  		String errMsg = msg.getMessage("exc.notFound.search", null, LocaleContextHolder.getLocale());
+  		log.warning(errMsg);
+  		throw new NotFoundException(errMsg);
   	}
   	
   	return ResponseEntity.ok(resList);
@@ -81,7 +92,7 @@ public class GestioneUtentiSearchController {
   	User user = service.loadUserByUsername(username);   
   	
   	if(user==null) {
-  		String errMsg = "Nessun utente trovato";
+  		String errMsg = msg.getMessage("exc.notFound.search", null, LocaleContextHolder.getLocale());
   		log.warning(errMsg);
   		throw new NotFoundException(errMsg);
   	}

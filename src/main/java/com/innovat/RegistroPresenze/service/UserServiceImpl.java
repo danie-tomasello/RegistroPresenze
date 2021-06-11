@@ -3,19 +3,20 @@ package com.innovat.RegistroPresenze.service;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.innovat.RegistroPresenze.dto.DTOUser;
+import com.innovat.RegistroPresenze.exception.DuplicateException;
 import com.innovat.RegistroPresenze.model.Authority;
 import com.innovat.RegistroPresenze.model.User;
 import com.innovat.RegistroPresenze.repository.AuthorityRepository;
@@ -26,7 +27,6 @@ import lombok.extern.java.Log;
 
 @Log
 @Service
-@CacheConfig(cacheNames= {"user"})
 public class UserServiceImpl implements UserService {	
      
 	@Autowired
@@ -37,13 +37,13 @@ public class UserServiceImpl implements UserService {
     
    
     
-   @Cacheable(value="user", key = "#username", sync = true)
+   @Cacheable(value="user", key ="#username")
     public User loadUserByUsername(String username) {
 	   log.info("loadUser richiesta non cachata");
 	   return repo.findByUsername(username);
     }
 
-    @Cacheable
+    @Cacheable(value="users")
 	public List<User> getAll() {
 		// TODO Auto-generated method stub
     	log.info("getAll richiesta non cachata");
@@ -59,22 +59,65 @@ public class UserServiceImpl implements UserService {
 
 	@Caching(evict = {
 			@CacheEvict(cacheNames = "users", allEntries = true),
-			@CacheEvict(cacheNames = "user", key = "#dtouser.username")
+			@CacheEvict(cacheNames = "user", allEntries = true)
 	})
-	public void save(DTOUser dtouser,String userLogged) {
+	public void save(DTOUser dtouser,String userLogged) throws DuplicateException {
 		// TODO Auto-generated method stub
 		User user = DTOUserFactory.createUser(dtouser,userLogged);
 		
-		Authority authorityUser = auth.findByName("ROLE_USER");
-	    List<Authority> authorities = Arrays.asList(new Authority[] {authorityUser});
-	    user.setAuthorities(authorities);
+		List<Authority> authlist = new ArrayList<>();
+		Map<String,Authority> mapAuth = mapListAuth(auth.findAll());
+		authlist.add(mapAuth.remove("ROLE_USER"));
+		
+		for(String auth : dtouser.getAuthorities()) {
+			if(mapAuth.containsKey(auth)) {
+				authlist.add(mapAuth.get(auth));
+			}
+		}
+		
+		int n = 0; 
+		for(boolean i = false; i==false; n++ ) {
+			
+			String username = user.getUsername();
+			if(n>0) {
+				username+=n;
+			}
+			
+			i = repo.findByUsername(username)==null;
+			
+			if(i==true) {
+				user.setUsername(username);
+			}
+		}
+		
+		user.setAuthorities(authlist);
 	    
-    	repo.save(user);
+		try {
+			
+			repo.save(user);
+			
+		} catch (DataIntegrityViolationException e) {
+		    String[] key = e.getRootCause().toString().split("'");
+		    
+		    String msg = "Variabile '"+key[1]+ "' duplicata";
+		    
+		    if(key[1].equalsIgnoreCase(user.getUsername())) {
+		    	msg = "Il nome utente esiste già";
+		    }
+		    if(key[1].equalsIgnoreCase(user.getEmail())) {
+		    	msg = "Email esiste già";
+		    }
+		    if(key[1].equalsIgnoreCase(user.getPhoneNumber())) {
+		    	msg = "Il numero di telefono esiste già";
+		    }
+		    throw new DuplicateException(msg);
+		    
+		}
 	}
 
 	@Caching(evict = {
 			@CacheEvict(cacheNames = "users", allEntries = true),
-			@CacheEvict(cacheNames = "user", key = "#id")
+			@CacheEvict(cacheNames = "user", allEntries = true)
 	})
 	public void delete(Long id) {
 		// TODO Auto-generated method stub
@@ -83,10 +126,10 @@ public class UserServiceImpl implements UserService {
 
 	@Caching(evict = {
 			@CacheEvict(cacheNames = "users", allEntries = true),
-			@CacheEvict(cacheNames = "user", key = "#dtouser.username")
+			@CacheEvict(cacheNames = "user", allEntries = true)
 	})
 	@Override
-	public void update(DTOUser dtouser, String userLogged) {
+	public void update(DTOUser dtouser, String userLogged) throws DuplicateException {
 		// TODO Auto-generated method stub
 		
 		User user = DTOUserFactory.createUser(dtouser,userLogged);
@@ -99,7 +142,30 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		user.setAuthorities(authlist);
-		repo.save(user);
+		
+		try {
+			
+			repo.save(user);
+			
+		} catch (DataIntegrityViolationException e) {
+		    String[] key = e.getRootCause().toString().split("'");
+		    
+		    String msg = "Variabile '"+key[1]+ "' duplicata";
+		    
+		    if(key[1].equalsIgnoreCase(user.getUsername())) {
+		    	msg = "Il nome utente esiste già";
+		    }
+		    if(key[1].equalsIgnoreCase(user.getEmail())) {
+		    	msg = "Email esiste già";
+		    }
+		    if(key[1].equalsIgnoreCase(user.getPhoneNumber())) {
+		    	msg = "Il numero di telefono esiste già";
+		    }
+		    throw new DuplicateException(msg);
+		    
+		}
+		
+		
 	}
 	
 	private Map<String,Authority> mapListAuth(List<Authority> authorities) {
@@ -109,6 +175,28 @@ public class UserServiceImpl implements UserService {
         }
         return res;
     }
+
+	@Cacheable(value="user", key ="#email")
+	@Override
+	public User loadUserByEmail(String email) {
+		log.info("findEmail richiesta non cachata");
+		return repo.findByEmail(email);
+	}
+
+	@Cacheable(value="user", key ="#phoneNumber")
+	@Override
+	public User loadUserByPhoneNumber(String phoneNumber) {
+		log.info("findPhoneNumber richiesta non cachata");
+		return repo.findByPhoneNumber(phoneNumber);
+	}
+
+	@Cacheable(value="user", key ="#id")
+	@Override
+	public User loadUserById(Long id) {
+		// TODO Auto-generated method stub
+		log.info("findId richiesta non cachata");
+		return repo.getOne(id);
+	}
 
         
 }

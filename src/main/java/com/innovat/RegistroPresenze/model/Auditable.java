@@ -28,7 +28,7 @@ public class Auditable<U> implements Serializable
 	private static final long serialVersionUID = -4292484566886615232L;
 
 	@CreatedDate
-    @Column(name = "created_date")
+    @Column(name = "created_date", updatable = false)
     private Date createdDate;
 
     @LastModifiedDate
@@ -38,18 +38,8 @@ public class Auditable<U> implements Serializable
     @Column(name = "last_modified_by")
     private U lastModifiedBy;
     
-    @Column(name = "VERIFICATION_CODE", length = 64, unique=true)    
-    private String verification;
-    
     public void setLastModifiedBy(U username) {
     	this.lastModifiedBy=username;
-    }
-    
-    public void setVerification(String verification) {
-    	this.verification=verification;
-    }
-    public String getVerification() {
-    	return verification;
     }
     
 }

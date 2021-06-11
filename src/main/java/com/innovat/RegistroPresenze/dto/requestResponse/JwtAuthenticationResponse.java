@@ -1,4 +1,4 @@
-package com.innovat.RegistroPresenze.dto;
+package com.innovat.RegistroPresenze.dto.requestResponse;
 
 import java.io.Serializable;
 import java.util.Collection;

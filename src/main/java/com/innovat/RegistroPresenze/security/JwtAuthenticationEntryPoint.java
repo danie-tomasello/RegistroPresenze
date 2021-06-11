@@ -34,7 +34,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
 		Exception exception = (Exception) request.getAttribute("exception");
-
+		
 		String message = authException.getMessage();
 
 		

@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -30,19 +31,28 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	String[] urlAdmin = {
-			"/user-service/save",
-			"/user-service/update",
-			"/user-service/delete/*",
-			"/user-service/get/*"
+			"/user/service/save",
+			"/user/service/update",
+			"/user/service/delete/*",
+			"/user/search/*",
+			"/event/service/type/save",
+			"/event/service/type/delete/*",
+			"/event/search",
+			"/event/service/delete/*"
 	};
 	String[] urlUser = {
-			"/auth-service/logout"
+			"/account/get",
+			"/account/update",
+			"/account/event/search",
+			"/account/event/delete/*",
+			"/event/service/save",
+			"/event/service/type/get",
+			"/report/csv/download"
 			};
 	
 	String[] urlPublic = {
-			"/auth-service/signin",
-			"/swagger-ui.html",
-			"/auth-service/refresh"
+			"/auth/signin",
+			"/auth/refresh"
 			};
 
     @Autowired
@@ -94,6 +104,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/v2/api-docs",
+                                   "/configuration/ui",
+                                   "/swagger-resources/**",
+                                   "/configuration/security",
+                                   "/swagger-ui.html",
+                                   "/webjars/**");
+    }
+    
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
