@@ -63,7 +63,6 @@ public class DTOUserFactory {
 
 		dtouser.setAuthorities(mapToGrantedAuthorities(user.getAuthorities()));
 		
-		
 		return dtouser;
 	}
 	

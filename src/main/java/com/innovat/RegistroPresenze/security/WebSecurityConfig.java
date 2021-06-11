@@ -34,12 +34,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			"/user/service/save",
 			"/user/service/update",
 			"/user/service/delete/*",
-			"/user/search/*"
+			"/user/search/*",
+			"/event/service/type/save",
+			"/event/service/type/delete/*",
+			"/event/search",
+			"/event/service/delete/*"
 	};
 	String[] urlUser = {
-			"account/get",
-			"account/update",
-			"/auth/logout"
+			"/account/get",
+			"/account/update",
+			"/account/event/search",
+			"/account/event/delete/*",
+			"/event/service/save",
+			"/event/service/type/get",
+			"/report/csv/download"
 			};
 	
 	String[] urlPublic = {

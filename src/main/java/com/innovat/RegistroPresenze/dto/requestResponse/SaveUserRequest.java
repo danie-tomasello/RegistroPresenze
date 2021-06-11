@@ -1,4 +1,4 @@
-package com.innovat.RegistroPresenze.dto;
+package com.innovat.RegistroPresenze.dto.requestResponse;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class SaveRequest {
+public class SaveUserRequest {
 	
 	
 	@NotNull(message="{NotNull.User.name}")
@@ -35,6 +35,6 @@ public class SaveRequest {
 	
 	private List<String> authorities;
 	
-	public SaveRequest() {}
+	public SaveUserRequest() {}
 
 }

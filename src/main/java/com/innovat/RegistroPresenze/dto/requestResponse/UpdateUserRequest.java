@@ -1,4 +1,4 @@
-package com.innovat.RegistroPresenze.dto;
+package com.innovat.RegistroPresenze.dto.requestResponse;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class UpdateRequest {
+public class UpdateUserRequest {
 	
 	
 	@NotNull(message="{NotNull.User.id}")
@@ -45,6 +45,6 @@ public class UpdateRequest {
     
     
     
-    public UpdateRequest(){}
+    public UpdateUserRequest(){}
 
 }

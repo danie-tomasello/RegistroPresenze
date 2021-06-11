@@ -32,7 +32,7 @@ import lombok.extern.java.Log;
 @RequestMapping(value = "${gestioneUtenti.search}")
 @Api(value="search", tags="Controller operazioni di ricerca dati utenti")
 @Log
-public class GestioneUtentiSearchController {
+public class UtentiSearchController {
 
 	@Autowired
     private UserService service;

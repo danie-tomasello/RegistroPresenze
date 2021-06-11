@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.innovat.RegistroPresenze.dto.DTOUser;
 import com.innovat.RegistroPresenze.dto.JwtUser;
-import com.innovat.RegistroPresenze.dto.MessageResponse;
-import com.innovat.RegistroPresenze.dto.SaveRequest;
-import com.innovat.RegistroPresenze.dto.UpdateRequest;
+import com.innovat.RegistroPresenze.dto.requestResponse.MessageResponse;
+import com.innovat.RegistroPresenze.dto.requestResponse.SaveUserRequest;
+import com.innovat.RegistroPresenze.dto.requestResponse.UpdateUserRequest;
 import com.innovat.RegistroPresenze.exception.BindingException;
 import com.innovat.RegistroPresenze.exception.DuplicateException;
 import com.innovat.RegistroPresenze.exception.NotFoundException;
@@ -40,7 +40,7 @@ import lombok.extern.java.Log;
 @RequestMapping(value = "${gestioneUtenti.uri}")
 @Api(value="service", tags="Controller operazioni di gestione dati utenti")
 @Log
-public class GestioneUtentiController {
+public class UtentiController {
 	
 	@Autowired
     private UserService service;
@@ -72,7 +72,7 @@ public class GestioneUtentiController {
 	    @ApiResponse(code = 401, message = "Non sei AUTENTICATO")
 	})
 	@RequestMapping(value = "${gestioneUtenti.save}", method = RequestMethod.POST)
-	public ResponseEntity<?> save(@ApiParam("Dati registrazione utente") @Valid @RequestBody SaveRequest requestBody,BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) throws  BindingException, DuplicateException {
+	public ResponseEntity<?> save(@ApiParam("Dati registrazione utente") @Valid @RequestBody SaveUserRequest requestBody,BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) throws  BindingException, DuplicateException {
 		log.info("===========================Start service/save/=="+requestBody.toString()+"=============================");
 		
 		JwtUser userlogged = jwtTokenUtil.getUserDetails(request.getHeader(tokenHeader));		
@@ -130,7 +130,7 @@ public class GestioneUtentiController {
 	    @ApiResponse(code = 401, message = "Non sei AUTENTICATO")
 	})
     @RequestMapping(value = "${gestioneUtenti.update}", method = RequestMethod.POST)
-    public ResponseEntity<?> update(@ApiParam("Dati utente") @Valid @RequestBody UpdateRequest requestBody,BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) throws NotFoundException, BindingException, DuplicateException {
+    public ResponseEntity<?> update(@ApiParam("Dati utente") @Valid @RequestBody UpdateUserRequest requestBody,BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) throws NotFoundException, BindingException, DuplicateException {
     	log.info("===========================Start service/update/=="+requestBody.toString()+"=============================");
     	JwtUser userlogged = jwtTokenUtil.getUserDetails(request.getHeader(tokenHeader));	
     	MessageResponse res = new MessageResponse();
@@ -147,23 +147,6 @@ public class GestioneUtentiController {
     		throw new NotFoundException(errMsg);
     	}
     	
-    	if(service.loadUserByUsername(requestBody.getUsername())!=null) {
-    		String errMsg = msg.getMessage("exc.duplicate.username", null, LocaleContextHolder.getLocale());
-    		log.warning(errMsg);
-    		throw new DuplicateException(errMsg);
-    	}
-    	
-    	if(service.loadUserByEmail(requestBody.getUsername())!=null) {
-    		String errMsg = msg.getMessage("exc.duplicate.email", null, LocaleContextHolder.getLocale());
-    		log.warning(errMsg);
-    		throw new DuplicateException(errMsg);
-    	}
-    	
-    	if(service.loadUserByPhoneNumber(requestBody.getUsername())!=null) {
-    		String errMsg = msg.getMessage("exc.duplicate.phoneNumber", null, LocaleContextHolder.getLocale());
-    		log.warning(errMsg);
-    		throw new DuplicateException(errMsg);
-    	}
     	
     	log.info("start modifica utente");
     	
@@ -178,6 +161,8 @@ public class GestioneUtentiController {
 		dtouser.setAuthorities(requestBody.getAuthorities());
     	
     	service.update(dtouser,userlogged.getUsername()); 
+    	
+    	
     	res.setCod(HttpStatus.CREATED.value());
     	res.setMsg(msg.getMessage("success.update", null, LocaleContextHolder.getLocale()));
 		return ResponseEntity.ok(res);

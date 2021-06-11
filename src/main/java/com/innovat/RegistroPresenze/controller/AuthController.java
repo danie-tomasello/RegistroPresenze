@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.innovat.RegistroPresenze.dto.JwtAuthenticationRequest;
-import com.innovat.RegistroPresenze.dto.JwtAuthenticationResponse;
+import com.innovat.RegistroPresenze.dto.requestResponse.JwtAuthenticationRequest;
+import com.innovat.RegistroPresenze.dto.requestResponse.JwtAuthenticationResponse;
 import com.innovat.RegistroPresenze.exception.ExpiredSessionException;
 import com.innovat.RegistroPresenze.utility.JwtTokenUtil;
 

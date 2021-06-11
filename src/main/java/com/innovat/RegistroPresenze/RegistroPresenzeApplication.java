@@ -36,11 +36,13 @@ public class RegistroPresenzeApplication {
 			User user=userRepository.findByUsername("admin");
 			User user2=userRepository.findByUsername("dani");
 			
-			
-			User dani=userRepository.findByUsername("daniele");
-			if(dani!=null) {
-				userRepository.delete(dani);
-			}
+//			if(typeRepo.findByName("INPUT")==null) {
+//				typeRepo.save(new Type("INPUT"));
+//			}
+//			if(typeRepo.findByName("OUTPUT")==null) {
+//				typeRepo.save(new Type("OUTPUT"));
+//			}
+
 			
 			if(user == null){
 
@@ -64,6 +66,8 @@ public class RegistroPresenzeApplication {
 				user = new User();
 				user.setAuthorities(authorities);
 				user.setUsername("admin");
+				user.setName("admin");
+				user.setSurname("admin");
 				user.setEmail("email@example.it");
 				user.setPhoneNumber("123456789");
 				user.setPassword(passwordEncoder.encode("admin"));
@@ -89,6 +93,8 @@ public class RegistroPresenzeApplication {
 				user = new User();
 				user.setAuthorities(authorities);
 				user.setUsername("dani");
+				user.setName("dani");
+				user.setSurname("dani");
 				user.setEmail("email2@example.it");
 				user.setPhoneNumber("987654321");
 				user.setPassword(passwordEncoder.encode("dani"));

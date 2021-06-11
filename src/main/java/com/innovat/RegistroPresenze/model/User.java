@@ -2,6 +2,7 @@ package com.innovat.RegistroPresenze.model;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,9 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,6 +31,7 @@ import lombok.ToString;
 @Data
 @ToString
 @EqualsAndHashCode(callSuper=false)
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User extends Auditable<String> implements Serializable{
    /**
 	 * 
@@ -71,9 +77,17 @@ public class User extends Auditable<String> implements Serializable{
     @JoinTable(
             name = "USERS_AUTHORITIES",
             joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "USERID")},
-            inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
-    @ToString.Exclude 
+            inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")}) 
     private List<Authority> authorities;
+    
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade= {CascadeType.ALL})
+    private List<Event> events;
+    
+    public User() {}
+    
+    public User(Long userId) {
+    	this.id = userId;
+    }
 
 
 

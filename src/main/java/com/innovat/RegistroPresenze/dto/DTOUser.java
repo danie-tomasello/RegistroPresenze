@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.innovat.RegistroPresenze.model.Event;
+
 import lombok.Data;
 import lombok.ToString;
 @Data
@@ -26,8 +28,6 @@ public class DTOUser {
 	private String phoneNumber;
 	
 	private List<String> authorities;
-    
-    
-    
+   
     public DTOUser(){}
 }

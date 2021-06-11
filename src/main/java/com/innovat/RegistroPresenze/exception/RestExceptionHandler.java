@@ -41,7 +41,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	public final ResponseEntity<?> expiredSessionHandler(Exception ex) throws JsonProcessingException{
 		HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.APPLICATION_JSON);
-		byte[] body = new ObjectMapper().writeValueAsBytes(Collections.singletonMap("cause", ex.getMessage()));
+		byte[] body = new ObjectMapper().writeValueAsBytes(Collections.singletonMap("cause", msg.getMessage("exc.expiredSession",null, LocaleContextHolder.getLocale())));
 		return new ResponseEntity<>(body,headers,HttpStatus.NOT_ACCEPTABLE);
 	}
 	@ExceptionHandler(BadCredentialsException.class)
@@ -71,6 +71,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler(DuplicateException.class)
 	public final ResponseEntity<?> exceptionDuplicateHandler(Exception ex) throws JsonProcessingException{
+		HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.APPLICATION_JSON);
+		byte[] body = new ObjectMapper().writeValueAsBytes(Collections.singletonMap("cause",ex.getMessage()));
+		return new ResponseEntity<>(body,headers,HttpStatus.NOT_ACCEPTABLE);
+	}
+	
+	@ExceptionHandler(DateFormatException.class)
+	public final ResponseEntity<?> exceptionDateFormatHandler(Exception ex) throws JsonProcessingException{
 		HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.APPLICATION_JSON);
 		byte[] body = new ObjectMapper().writeValueAsBytes(Collections.singletonMap("cause",ex.getMessage()));
