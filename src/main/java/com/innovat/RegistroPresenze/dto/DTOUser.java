@@ -27,6 +27,8 @@ public class DTOUser {
 
 	private String phoneNumber;
 	
+	private String creationDate;
+	
 	private List<String> authorities;
    
     public DTOUser(){}

@@ -28,4 +28,6 @@ public interface UserService {
 
 	public User loadUserById(Long id);
 
+	public void updatePassword(JwtUser userlogged, String username);
+
 }

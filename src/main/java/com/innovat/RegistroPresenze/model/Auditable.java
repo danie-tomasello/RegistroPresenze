@@ -15,8 +15,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter(AccessLevel.PROTECTED)
-@Setter(AccessLevel.PROTECTED)
+
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class Auditable<U> implements Serializable
@@ -41,5 +40,25 @@ public class Auditable<U> implements Serializable
     public void setLastModifiedBy(U username) {
     	this.lastModifiedBy=username;
     }
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	protected void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	protected void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public U getLastModifiedBy() {
+		return lastModifiedBy;
+	}
     
 }

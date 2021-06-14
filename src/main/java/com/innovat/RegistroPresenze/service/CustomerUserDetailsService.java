@@ -29,15 +29,15 @@ public class CustomerUserDetailsService implements UserDetailsService{
     	return getHttpValue(username);
     }
     
-    private JwtUser getHttpValue(String userId){
+    private JwtUser getHttpValue(String username){
     	
     	User user=null;
     	try {
     		
-    		user = service.loadUserByUsername(userId);
+    		user = service.loadUserByUsername(username);
     		log.info(this.getClass().getSimpleName()+" "+user.toString());
     	}catch(Exception e) {
-    		throw new UsernameNotFoundException(String.format("No user found with username '%s'.", userId));
+    		throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
     	}
     	return JwtUserFactory.create(DTOUserFactory.createDTOUser(user));
     }

@@ -43,6 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	String[] urlUser = {
 			"/account/get",
 			"/account/update",
+			"/account/changePassword",
 			"/account/event/search",
 			"/account/event/delete/*",
 			"/event/service/save",

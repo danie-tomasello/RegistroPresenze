@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.innovat.RegistroPresenze.dto.DTOUser;
+import com.innovat.RegistroPresenze.dto.JwtUser;
 import com.innovat.RegistroPresenze.exception.DuplicateException;
 import com.innovat.RegistroPresenze.model.Authority;
 import com.innovat.RegistroPresenze.model.User;
@@ -196,6 +196,19 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		log.info("findId richiesta non cachata");
 		return repo.getOne(id);
+	}
+
+	@Caching(evict = {
+			@CacheEvict(cacheNames = "users", allEntries = true),
+			@CacheEvict(cacheNames = "user", allEntries = true)
+	})
+	@Override
+	public void updatePassword(JwtUser userLogged, String newPassword) {
+		// TODO Auto-generated method stub
+		User user = repo.getOne(userLogged.getId());
+		user.setPassword(newPassword);
+		user.setLastModifiedBy(userLogged.getUsername());
+		repo.save(user);
 	}
 
         

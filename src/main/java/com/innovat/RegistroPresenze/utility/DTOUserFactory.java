@@ -3,6 +3,8 @@ package com.innovat.RegistroPresenze.utility;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.joda.time.DateTime;
+
 import com.innovat.RegistroPresenze.dto.DTOUser;
 import com.innovat.RegistroPresenze.model.Authority;
 import com.innovat.RegistroPresenze.model.User;
@@ -60,6 +62,8 @@ public class DTOUserFactory {
 		dtouser.setPhoneNumber(user.getPhoneNumber());
 		
 		dtouser.setEmail(user.getEmail());
+		
+		dtouser.setCreationDate(new DateTime(user.getCreatedDate()).toString("d/M/yyyy"));
 
 		dtouser.setAuthorities(mapToGrantedAuthorities(user.getAuthorities()));
 		
