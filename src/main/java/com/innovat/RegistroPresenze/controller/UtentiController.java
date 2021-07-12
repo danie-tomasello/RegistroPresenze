@@ -1,5 +1,8 @@
 package com.innovat.RegistroPresenze.controller;
 
+import java.io.UnsupportedEncodingException;
+
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.innovat.RegistroPresenze.dto.DTOUser;
@@ -26,6 +31,7 @@ import com.innovat.RegistroPresenze.dto.requestResponse.UpdateUserRequest;
 import com.innovat.RegistroPresenze.exception.BindingException;
 import com.innovat.RegistroPresenze.exception.DuplicateException;
 import com.innovat.RegistroPresenze.exception.NotFoundException;
+import com.innovat.RegistroPresenze.model.User;
 import com.innovat.RegistroPresenze.service.UserService;
 import com.innovat.RegistroPresenze.utility.JwtTokenUtil;
 
@@ -199,6 +205,42 @@ public class UtentiController {
     	res.setMsg(msg.getMessage("success.delete", null, LocaleContextHolder.getLocale()));
     	return ResponseEntity.ok(res);
     }
+	
+	@ApiOperation(
+		      value = "Info account", 
+		      notes = "Invia una mail con le info dell'account",
+		      response = MessageResponse.class, 
+		      produces = "application/json")
+	@ApiResponses(value =
+	{   @ApiResponse(code = 201, message = "Email inviata con successo"),
+	    @ApiResponse(code = 403, message = "Non sei AUTORIZZATO ad accedere alle informazioni"),
+	    @ApiResponse(code = 401, message = "Non sei AUTENTICATO")
+	})
+	@RequestMapping(value = "${gestioneUtenti.send}", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> send(	@ApiParam("Id utente univoco") 
+									@RequestParam(name = "userMail") String userMail, 
+									@ApiParam("password utente") 
+									@RequestParam(name = "password") String password, 
+									HttpServletRequest request, 
+									HttpServletResponse response) throws NotFoundException, UnsupportedEncodingException, MessagingException {
+	
+		log.info("===========================Start service/send/=="+userMail+"=========="+ password +"===================");
+		MessageResponse res = new MessageResponse();
+		
+		
+		User user = service.loadUserByEmail(userMail);
+		if(user==null) {
+			String errMsg = msg.getMessage("exc.notFound.user", null, LocaleContextHolder.getLocale());
+			log.warning(errMsg);
+			throw new NotFoundException(errMsg);
+		}
+		
+		service.send(user, password);  
+		res.setCod(HttpStatus.OK.value());
+		res.setMsg(msg.getMessage("success.send", null, LocaleContextHolder.getLocale()));
+	  	return ResponseEntity.ok(res);
+	}
 	
 
     

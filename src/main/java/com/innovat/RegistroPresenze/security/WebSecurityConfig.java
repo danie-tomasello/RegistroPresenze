@@ -35,6 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			"/user/service/update",
 			"/user/service/delete/*",
 			"/user/search/*",
+			"/user/service/send",
 			"/event/service/type/save",
 			"/event/service/type/delete/*",
 			"/event/search",

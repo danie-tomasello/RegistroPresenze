@@ -54,9 +54,4 @@ public class DTOEvent implements Serializable{
 	    	this.output2 = output2;
 	    }
 	    
-//	    public DTOEvent(String time, Long typeId, String username) {
-//	    	this.time = time;
-//	    	this.typeId = typeId;
-//	    	this.username = username;
-//	    }
 }

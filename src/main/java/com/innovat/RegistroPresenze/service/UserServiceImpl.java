@@ -2,16 +2,24 @@ package com.innovat.RegistroPresenze.service;
 
 
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.innovat.RegistroPresenze.dto.DTOUser;
@@ -24,6 +32,7 @@ import com.innovat.RegistroPresenze.repository.UserRepository;
 import com.innovat.RegistroPresenze.utility.DTOUserFactory;
 
 import lombok.extern.java.Log;
+import net.bytebuddy.utility.RandomString;
 
 @Log
 @Service
@@ -34,6 +43,9 @@ public class UserServiceImpl implements UserService {
     
     @Autowired
     private UserRepository repo;
+    
+    @Autowired
+    private JavaMailSender mailSender;
     
    
     
@@ -50,10 +62,8 @@ public class UserServiceImpl implements UserService {
 		return repo.findAll();
 	}
 	
-    @Cacheable(value="user", key = "#id", sync = true)
 	public boolean isExist(Long id) {
 		// TODO Auto-generated method stub
-		log.info("isExist richiesta non cachata");
 		return repo.existsById(id);
 	}
 
@@ -210,6 +220,39 @@ public class UserServiceImpl implements UserService {
 		user.setLastModifiedBy(userLogged.getUsername());
 		repo.save(user);
 	}
+
+	@Override
+	public void send(User user, String password) throws UnsupportedEncodingException, MessagingException {
+		
+		String toAddress = user.getEmail();
+        String fromAddress = "danieletomasello.innovat@gmail.com";
+        String senderName = "Innovat";
+        String subject = "Info account";
+        String content = "Ciao [[name]],<br>"
+                + "ecco le tue nuove credenziali per accedere al portale innovat per il registro delle presenze:<br>"
+                + "<h3>username: [[username]], password: [[password]]</h3>"
+                + "Grazie,<br>"
+                + "Innovat.";
+         
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+         
+        helper.setFrom(fromAddress, senderName);
+        helper.setTo(toAddress);
+        helper.setSubject(subject);
+         
+        content = content.replace("[[name]]", user.getName()+" "+user.getSurname());
+         
+        content = content.replace("[[username]]", user.getUsername());
+        
+        content = content.replace("[[password]]", password);
+         
+        helper.setText(content, true);
+         
+        mailSender.send(message);
+		
+	}
+	
 
         
 }

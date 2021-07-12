@@ -83,6 +83,9 @@ public class User extends Auditable<String> implements Serializable{
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade= {CascadeType.ALL})
     private List<Event> events;
     
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade= {CascadeType.ALL})
+    private List<Permission> permissions;
+    
     public User() {}
     
     public User(Long userId) {

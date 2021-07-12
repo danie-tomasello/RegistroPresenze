@@ -54,7 +54,7 @@ public class UtentiSearchController {
 	})
 	@RequestMapping(value = "${gestioneUtenti.getAll}", method = RequestMethod.GET)
   public ResponseEntity<?> getAllUser(HttpServletRequest request, HttpServletResponse response) throws NotFoundException{
-  	log.info("===========================Start search/'all'===============================");
+  	log.info("===========================Start get/'all'===============================");
   	
   	List<DTOUser> resList = new ArrayList<>();
   	
@@ -76,7 +76,7 @@ public class UtentiSearchController {
   
 	
 	@ApiOperation(
-		      value = "Ricerca utente per nome", 
+		      value = "Ricerca utente per id", 
 		      notes = "Restituisce l'utente trovato",
 		      response = DTOUser.class, 
 		      produces = "application/json")
@@ -86,10 +86,10 @@ public class UtentiSearchController {
 	    @ApiResponse(code = 403, message = "Non sei AUTORIZZATO ad accedere alle informazioni"),
 	    @ApiResponse(code = 401, message = "Non sei AUTENTICATO")
 	})
-  @RequestMapping(value = "${gestioneUtenti.getByUsername}", method = RequestMethod.GET)
-  public ResponseEntity<?> getByUsername(@ApiParam("Nome utente") @PathVariable (value="username") String username) throws NotFoundException {
-  	log.info("===========================Start search/=="+username+"=============================");
-  	User user = service.loadUserByUsername(username);   
+  @RequestMapping(value = "${gestioneUtenti.getById}", method = RequestMethod.GET)
+  public ResponseEntity<?> getById(@ApiParam("Id utente") @PathVariable (value="id") Long id) throws NotFoundException {
+  	log.info("===========================Start get/=="+id+"=============================");
+  	User user = service.loadUserById(id);   
   	
   	if(user==null) {
   		String errMsg = msg.getMessage("exc.notFound.search", null, LocaleContextHolder.getLocale());
@@ -99,5 +99,6 @@ public class UtentiSearchController {
   	
   	return ResponseEntity.ok(DTOUserFactory.createDTOUser(user));
   }
+	
 	
 }

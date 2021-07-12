@@ -1,6 +1,9 @@
 package com.innovat.RegistroPresenze.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
+
+import javax.mail.MessagingException;
 
 import com.innovat.RegistroPresenze.dto.DTOUser;
 import com.innovat.RegistroPresenze.dto.JwtUser;
@@ -29,5 +32,7 @@ public interface UserService {
 	public User loadUserById(Long id);
 
 	public void updatePassword(JwtUser userlogged, String username);
+	
+	void send(User user,String password) throws UnsupportedEncodingException, MessagingException;
 
 }

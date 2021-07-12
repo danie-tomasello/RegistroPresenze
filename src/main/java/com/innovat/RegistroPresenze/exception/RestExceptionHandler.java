@@ -67,14 +67,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		byte[] body = new ObjectMapper().writeValueAsBytes(Collections.singletonMap("cause",ex.getMessage()));
 		return new ResponseEntity<>(body,headers,HttpStatus.NOT_FOUND);
 	}
-	
-	
+		
 	@ExceptionHandler(DuplicateException.class)
 	public final ResponseEntity<?> exceptionDuplicateHandler(Exception ex) throws JsonProcessingException{
 		HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.APPLICATION_JSON);
 		byte[] body = new ObjectMapper().writeValueAsBytes(Collections.singletonMap("cause",ex.getMessage()));
-		return new ResponseEntity<>(body,headers,HttpStatus.NOT_ACCEPTABLE);
+		return new ResponseEntity<>(body,headers,HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(DateFormatException.class)
@@ -82,7 +81,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.APPLICATION_JSON);
 		byte[] body = new ObjectMapper().writeValueAsBytes(Collections.singletonMap("cause",ex.getMessage()));
-		return new ResponseEntity<>(body,headers,HttpStatus.NOT_ACCEPTABLE);
+		return new ResponseEntity<>(body,headers,HttpStatus.BAD_REQUEST);
 	}
 
 }

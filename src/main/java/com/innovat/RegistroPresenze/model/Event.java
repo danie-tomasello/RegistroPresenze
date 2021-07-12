@@ -3,6 +3,7 @@ package com.innovat.RegistroPresenze.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -56,9 +57,11 @@ public class Event extends Auditable<String> implements Serializable{
 	    private User user;
 
 		
-//		@ManyToOne(fetch=FetchType.EAGER)
-//		@JoinColumn(name="TYPE_ID",nullable=false)
-//	    private Type type;
+		@ManyToOne(fetch=FetchType.EAGER,cascade= {CascadeType.ALL})
+		@JoinColumn(name="PERMISSION_ID",nullable=true)
+		@JsonBackReference
+		@ToString.Exclude
+	    private Permission permission;
 
 		public Event() {}
 
