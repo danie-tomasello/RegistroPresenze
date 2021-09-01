@@ -42,7 +42,7 @@ import lombok.extern.java.Log;
 public class AuthController {
 
     @Value("${jwt.header}")
-    private String tokenHeader;
+    private String tokenHeader; 
     
     @Value("${jwt.refreshHeader}")
     private String tokenRefreshHeader;
