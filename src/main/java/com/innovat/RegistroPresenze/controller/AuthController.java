@@ -45,7 +45,7 @@ public class AuthController {
     private String tokenHeader;
     
     @Value("${jwt.refreshHeader}")
-    private String tokenRefreshHeader; 
+    private String tokenRefreshHeader;   
 
     @Autowired
     private AuthenticationManager authenticationManager;
